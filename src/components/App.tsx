@@ -5,7 +5,7 @@ import { formatDate, getSowDate, getGerminationDate } from '../utils/calendar';
 
 export default class App extends Component {
     render () {
-        const seedData = seeds.map((seed, index) => {
+        const seedData = seeds.map((seed: any, index: number) => {
             const { daysFromSeedToLastFrost, daysToGermination } = seed;
             const firstPossibleSowDate = getSowDate(daysFromSeedToLastFrost[1]);
             const lastPossibleSowDate = getSowDate(daysFromSeedToLastFrost[0]);
