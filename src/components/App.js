@@ -1,38 +1,40 @@
 import React, { Component } from 'react';
 
 import { seeds } from '../data/seeds';
-import { getSowDate } from '../utils/calendar';
+import { formatDate, getSowDate, getGerminationDate } from '../utils/calendar';
 
 export default class App extends Component {
     render () {
         const seedData = seeds.map((seed, index) => {
-            const firstPossibleSowDate = getSowDate(seed.daysFromSeedToLastFrost[1]);
-            const lastPossibleSowDate = getSowDate(seed.daysFromSeedToLastFrost[0]);
+            const { daysFromSeedToLastFrost, daysToGermination } = seed;
+            const firstPossibleSowDate = getSowDate(daysFromSeedToLastFrost[1]);
+            const lastPossibleSowDate = getSowDate(daysFromSeedToLastFrost[0]);
+            const firstPossibleGerminationDate = getGerminationDate(firstPossibleSowDate, daysToGermination[1]);
+            const lastPossibleGerminationDate = getGerminationDate(lastPossibleSowDate, daysToGermination[0]);
             return (
                 <div key={`seed-${index}`}>
+                    <div>{seed.name}</div>
                     {!seed.isDirectSow ? (
                         <div>
-                            <div>{seed.name}</div>
                             {firstPossibleSowDate === lastPossibleSowDate ? (
                                 <div>
-                                    Sow on {firstPossibleSowDate}
+                                    Sow on {formatDate(firstPossibleSowDate)}
                                 </div>
                             ) : (
                                 <div>
-                                    Sow in between {firstPossibleSowDate} and {lastPossibleSowDate}
+                                    Sow: {formatDate(firstPossibleSowDate)} - {formatDate(lastPossibleSowDate)}
                                 </div>
                             )}
-                            <div>
-                            </div>
-                            <br/>
                         </div>
                     ) : (
                         <div>
-                            <div>{seed.name}</div>
-                            <div>Sow Directly in between: {getSowDate(seed.daysFromSeedToLastFrost[1])} and {getSowDate(seed.daysFromSeedToLastFrost[0])}</div>
-                            <br/>
+                            <div>Sow Directly: {formatDate(firstPossibleSowDate)} - {formatDate(lastPossibleSowDate)}</div>
                         </div>
                     )}
+                    <div>
+                        Germination: {formatDate(firstPossibleGerminationDate)} - {formatDate(lastPossibleGerminationDate)}
+                    </div>
+                    <br/>
                 </div>
             );
         });
